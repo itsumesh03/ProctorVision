@@ -24,7 +24,7 @@ const VideoInterview = () => {
   let mediaStream = null;
   const startVideo = async () => {
     try {
-      mediaStream = await navigator.mediaDevices.getUser Media({ video: true, audio: true });
+      mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
       }
