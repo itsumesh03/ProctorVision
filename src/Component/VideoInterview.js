@@ -21,26 +21,22 @@ const VideoInterview = () => {
 
   // --- Start Video ---
   useEffect(() => {
-  let mediaStream = null;
-  const startVideo = async () => {
-    try {
-      mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      if (videoRef.current) {
+    const startVideo = async () => {
+      try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         videoRef.current.srcObject = mediaStream;
+        setStream(mediaStream);
+        setStartTime(Date.now());
+      } catch (error) {
+        console.error('Error accessing webcam:', error);
       }
-      setStartTime(Date.now());
-    } catch (error) {
-      console.error('Error accessing webcam:', error);
-    }
-  };
-  startVideo();
-  return () => {
-    // Cleanup: stop all tracks when component unmounts
-    if (mediaStream) {
-      mediaStream.getTracks().forEach(track => track.stop());
-    }
-  };
-}, []); // <-- empty dependency array to run only once on mount
+    };
+    startVideo();
+
+    return () => {
+      if (stream) stream.getTracks().forEach(track => track.stop());
+    };
+  }, [stream]);
 
   // --- Detection Utilities ---
   const checkLookingAwayBoundingBox = (personPrediction, videoWidth) => {
